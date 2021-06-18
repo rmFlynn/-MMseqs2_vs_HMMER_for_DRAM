@@ -6,6 +6,12 @@ Thu Jun 17, vogdb/vog_by_vog_mmseqs_t32.sh,  4ca412b, 18303, "Re-run of all mmse
 Thu Jun 18, vogdb/genome15_by_vog_hmmer.sh,  4219583, 18304, "Fixed hmmer re-run"
 Thu Jun 18, vogdb/shale_by_vog_hmmer.sh,     4219583, 18306, "Fixed hmmer re-run"
 Thu Jun 18, vogdb/vog_by_vog_hmmer.sh,       4219583, 18307, "Fixed hmmer re-run"
-
+Thu Jun 18, dbcan/cazydb_by_dbcan_hmmer.sh,  bf2fe8f, 18319, "Impove code and start dbcan"
+Thu Jun 18, dbcan/cazydb_by_dbcan_hmmer.sh,  bf2fe8f, 18319, "Impove code and start dbcan"
+Thu Jun 18, dbcan/cazydb_by_dbcan_mmseqs.sh, bf2fe8f, 18324, "Impove code and start dbcan"
+Thu Jun 18, dbcan/.sh, bf2fe8f, , "Impove code and start dbcan"
+Thu Jun 18, dbcan/.sh, bf2fe8f, , "Impove code and start dbcan"
+Thu Jun 18, dbcan/.sh, bf2fe8f, , "Impove code and start dbcan"
+Thu Jun 18, dbcan/.sh, bf2fe8f, , "Impove code and start dbcan"
 
 
