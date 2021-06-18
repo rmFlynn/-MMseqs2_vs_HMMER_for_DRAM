@@ -6,19 +6,12 @@ import time
 from subprocess import Popen
 from datetime import datetime
 import argparse
+from shared import working_dir_setup, BOUTFMT6_COLUMNS
 
-BOUTFMT6_COLUMNS = ['qId', 'tId', 'seqIdentity', 'alnLen', 'mismatchCnt',
-                    'gapOpenCnt', 'qStart', 'qEnd', 'tStart', 'tEnd', 'eVal',
-                    'bitScore']
 
 ###############
 # Vogdb setup #
 ###############
-
-def working_dir_setup(working_dir):
-    """Set up the dir"""
-    assert not os.path.exists(working_dir), "Results already exist"
-    os.mkdir(working_dir)
 
 def process_profile(working_dir, threads:int, raw_aln:str):
     os.chdir(working_dir)
@@ -96,7 +89,9 @@ def mmseqs_search(working_dir, sensitivity, evalue, threads, clock_run):
            'sweep_output/evalue_%s_sens_%f' %(str(evalue), sensitivity),
            ]).wait()
 
-if __name__ == '__main__':
+
+def mmseqs_parser() -> tuple[int, str, str, str, str, bool]:
+    """Parse user arguments"""
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--threads", type=int, default=2,
                         help="number of threads for mmseqs")
@@ -111,15 +106,25 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--clock_run", type=bool, default=False,
                         help="To time or not time the run, default not")
     par = parser.parse_args()
+    return par.threads, par.protein_data, par.raw_aln, par.name, \
+        par.output_dir, par.clock_run
+
+def main():
+    threads, protein_data, raw_aln, name, output_dir, clock_run = \
+        mmseqs_parser()
 
     working_dir = os.path.join(
-        par.output_dir,
-        par.name + "_results_"+ datetime.now().strftime("%Y_%m_%d_%H"))
-    par = parser.parse_args()
+        output_dir,
+        name + "_results_"+ datetime.now().strftime("%Y_%m_%d_%H"))
+
     working_dir_setup(working_dir)
-    process_profile(working_dir, par.threads, par.raw_aln)
-    process_protine(working_dir, par.threads, par.protein_data)
+    process_profile(working_dir, threads, raw_aln)
+    process_protine(working_dir, threads, protein_data)
 
     for sens in range(12, 16, 1):
         for evalue in list(range(-20, 0, 2)) + [-15]:
-            mmseqs_search(working_dir, sens / 2, float("1e%i"%evalue), par.threads, par.clock_run)
+            mmseqs_search(working_dir, sens / 2,
+                          float("1e%i"%evalue), threads, clock_run)
+
+if __name__ == '__main__':
+    main()

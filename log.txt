@@ -1,3 +1,11 @@
-                             time,                     script,         git, slurm, comment
-Thu Jun 17 13:59:32 MDT 202118234, job_scripts/vogdb/hmmer.sh,     b764ee4, 18234, "First hmmer run run"
-Thu Jun 17 13:59:32 MDT 202118234, job_scripts/vogdb/mmseqs_t2.sh, b764ee4, 18244, "First mmseqs run"
+time,       script,                          git,     slurm,  comment
+Thu Jun 17, vogdb/vog_by_vog_mmseqs_t2.sh,   4ca412b, 18302, "Re-run of all mmseqs, hmmer had a minor error"
+Thu Jun 17, vogdb/genome15_by_vog_mmseqs.sh, 4ca412b, 18298, "Re-run of all mmseqs, hmmer had a minor error"
+Thu Jun 17, vogdb/shale_by_vog_mmseqs.sh,    4ca412b, 18300, "Re-run of all mmseqs, hmmer had a minor error"
+Thu Jun 17, vogdb/vog_by_vog_mmseqs_t32.sh,  4ca412b, 18303, "Re-run of all mmseqs, hmmer had a minor error"
+Thu Jun 18, vogdb/genome15_by_vog_hmmer.sh,  4219583, 18304, "Fixed hmmer re-run"
+Thu Jun 18, vogdb/shale_by_vog_hmmer.sh,     4219583, 18306, "Fixed hmmer re-run"
+Thu Jun 18, vogdb/vog_by_vog_hmmer.sh,       4219583, 18307, "Fixed hmmer re-run"
+
+
+
