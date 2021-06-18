@@ -1,8 +1,8 @@
 """Perform a HMMER scan"""
 import os
 import argparse
-from mag_annotator.utils import run_process
 from datetime import datetime
+from mag_annotator.utils import run_process
 
 def working_dir_setup(working_dir):
     """Set up the dir"""
@@ -13,14 +13,14 @@ def main():
     """Maine function"""
     threads = 2
     parser = argparse.ArgumentParser()
-    parser.add_argument("-g", "--genes_faa", type=str, default=None,
+    parser.add_argument("-g", "--protein_data", type=str, default=None,
                         help="The protein data to be annotated usaly an fa")
     parser.add_argument("-m", "--hmm", type=str, default=None,
                         help="The HMM file")
-    parser.add_argument("-o", "--output_dir", type=str, default=None,
-                        help="The output directory")
     parser.add_argument("-n", "--name", type=str, default=None,
                         help="A name for the run")
+    parser.add_argument("-o", "--output_dir", type=str, default=None,
+                        help="The output directory")
     parser.add_argument("-c", "--clock_run", type=bool, default=False,
                         help="To time or not time the run, default not")
     par = parser.parse_args()

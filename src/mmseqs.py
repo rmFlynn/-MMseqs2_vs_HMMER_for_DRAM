@@ -34,7 +34,7 @@ def process_profile(working_dir, threads:int, raw_aln:str):
     os.system("mmseqs msa2profile vog_msa profile --match-mode 1")
     os.chdir(working_dir)
 
-def process_target(working_dir, threads:int, protein_data:str, sensitivity:float=None):
+def process_protine(working_dir, threads:int, protein_data:str, sensitivity:float=None):
     """
     process proteins to be annotated
 
@@ -111,8 +111,9 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--clock_run", type=bool, default=False,
                         help="To time or not time the run, default not")
     par = parser.parse_args()
+
     working_dir = os.path.join(
-        output_dir,
+        par.output_dir,
         par.name + "_results_"+ datetime.now().strftime("%Y_%m_%d_%H"))
     par = parser.parse_args()
     working_dir_setup(working_dir)
@@ -122,5 +123,3 @@ if __name__ == '__main__':
     for sens in range(12, 16, 1):
         for evalue in list(range(-20, 0, 2)) + [-15]:
             mmseqs_search(working_dir, sens / 2, float("1e%i"%evalue), par.threads, par.clock_run)
-
-

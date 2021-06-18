@@ -1,1 +1,3 @@
-time, script, git, comment
+                             time,                     script,         git, slurm, comment
+Thu Jun 17 13:59:32 MDT 202118234, job_scripts/vogdb/hmmer.sh,     b764ee4, 18234, "First hmmer run run"
+Thu Jun 17 13:59:32 MDT 202118234, job_scripts/vogdb/mmseqs_t2.sh, b764ee4, 18244, "First mmseqs run"
