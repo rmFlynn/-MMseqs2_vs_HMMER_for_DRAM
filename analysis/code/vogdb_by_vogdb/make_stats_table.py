@@ -7,7 +7,7 @@ import pandas as pd
 from shared_tools import parse_hmmsearch_domtblout, \
     read_mmseqs_results, list_vog_protines, list_vogs, \
     read_vog_truth, make_hmmmer_vs_vog_truth_df, \
-    make_mmseqs_vs_vog_truth_df
+    make_mmseqs_vs_vog_truth_df, MMSEQS_SWEEP_OUTPUT, OUT_DATA_PATH
 
 VOGDB_BY_VOGDB_MMSEQS_ARGS = {'strip_from_annotations':['.msa'],
                               'take_only_one':True}
@@ -73,14 +73,14 @@ def count_vogs():
     return len(list_vogs())
 
 def hmmer_cfmx(hmmer_results, vog_truth, total_negitive):
-    base = make_hmmmer_df(hmmer_results, vog_truth)
+    base = make_hmmmer_vs_vog_truth_df(hmmer_results, vog_truth)
     cfmx = confusion_matrix(base['true_pred'], base['hmmer_pred'])
     cfmx = make_cf_real(cfmx, total_negitive)
     return cfmx
 
 def mmseqs_cfmx(mmseqs_path, vog_truth, total_negitive):
     mmseqs_results = read_mmseqs_results(mmseqs_path)
-    mmseqs_cmp = make_mmseqs_df(mmseqs_results, vog_truth)
+    mmseqs_cmp = make_mmseqs_vs_vog_truth_df(mmseqs_results, vog_truth)
     cfmx = confusion_matrix(mmseqs_cmp['true_pred'],
                             mmseqs_cmp['mmseqs_pred'])
     cfmx = make_cf_real(cfmx, total_negitive)
@@ -100,12 +100,8 @@ def make_final_df():
     The total negatives protein counts are made here. The process should be
     simple but unique to each gold standard analysis.
     """
-    vog_count = count_vogs(
-        "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/data/vogdb/"
-        "vog.raw_algs.20210525.tar.gz")
-    protein_count = count_vog_proteins(
-        "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/data/vogdb/"
-        "vog.proteins.all.20210525.fa")
+    vog_count = count_vogs()
+    protein_count = count_vog_proteins()
     total_negitive = protein_count * vog_count - len(vog_truth)
 
     hmmer_stats = make_stats_df(
@@ -122,12 +118,8 @@ def make_final_df():
     all_stats = pd.concat(mmseqs_dfs)
     all_stats.sort_values('name', ascending=False, inplace=True)
     all_stats.reset_index(inplace=True, drop=True)
-    all_stats.to_pickle("/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/"\
-                        "data/vogdb_by_vogdb/"\
-                        "all_confusion_matrix_and_stats.pkl")
-    all_stats.to_csv("/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/data"\
-                      "/vogdb_by_vogdb/all_confusion_matrix_and_stats.csv",
-                     index=False)
+    all_stats.to_csv(os.path.join(OUT_DATA_PATH, 'gold_standard_comp_stats.csv'), index=False)
+    all_stats.to_pickle(os.path.join(OUT_DATA_PATH, 'gold_standard_comp_stats.pkl'))
 
 if __name__ == '__main__':
     make_final_df()

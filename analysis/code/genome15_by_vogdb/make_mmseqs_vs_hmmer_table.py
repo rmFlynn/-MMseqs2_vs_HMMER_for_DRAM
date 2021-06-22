@@ -14,7 +14,8 @@ from sklearn.preprocessing import MinMaxScaler
 from decimal import Decimal
 from multiprocessing import Pool
 from shared_tools import parse_hmmsearch_domtblout,\
-    read_mmseqs_results, make_hmmer_vs_mmseqs_df, MMSEQS_SWEEP_OUTPUT
+    read_mmseqs_results, make_hmmer_vs_mmseqs_df, \
+    MMSEQS_SWEEP_OUTPUT, OUT_DATA_PATH
 
 def make_dif_df(data, name):
     # this is a confusion_matrix but hmmer is true
@@ -43,7 +44,10 @@ def make_count_table():
     count_table = pd.concat([
         sweep_the_mmseqs(name, MMSEQS_SWEEP_OUTPUT, hmmer_results)
         for name in os.listdir(MMSEQS_SWEEP_OUTPUT)])
-    count_table = split_out_eval_sens(genome15_count)
-    count_table.to_csv(os.path.join(OUT_DATA_PATH, 'gold_standard_comp_stats.csv'))
-    count_table.to_pickle(os.path.join(OUT_DATA_PATH, 'gold_standard_comp_stats.pkl'))
+    count_table = split_out_eval_sens(count_table)
+    count_table.to_csv(os.path.join(OUT_DATA_PATH, 'mmseqs_vs_hmmer_comp_stats.csv'))
+    count_table.to_pickle(os.path.join(OUT_DATA_PATH, 'mmseqs_vs_hmmer_comp_stats.pkl'))
+
+if __name__ == '__main__':
+    make_count_table()
 
