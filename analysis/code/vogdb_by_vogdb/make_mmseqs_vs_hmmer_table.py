@@ -48,3 +48,6 @@ def make_count_table():
     count_table.to_csv(os.path.join(OUT_DATA_PATH, 'mmseqs_vs_hmmer_comp_stats.csv'))
     count_table.to_pickle(os.path.join(OUT_DATA_PATH, 'mmseqs_vs_hmmer_comp_stats.pkl'))
 
+if __name__ == '__main__':
+    make_count_table()
+

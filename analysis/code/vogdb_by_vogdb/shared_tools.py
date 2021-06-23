@@ -17,9 +17,8 @@ HMMER_FILE = \
     "vogdb_by_vogdb/hmmer/vogdb_by_vogdb_hmmer_results_2021_06_18_09/"\
     "hmmer_results.b6"
 MMSEQS_SWEEP_OUTPUT = \
-    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/results/"\
-    "vogdb_by_vogdb/mmseqs/vogdb_by_vogdb_mmseqs_t2_results_2021_06_17_18"\
-    "/sweep_output/"
+    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/results/vogdb_by_vogdb/"\
+    "mmseqs/vogdb_by_vogdb_mmseqs_t32_results_2021_06_17_18/sweep_output/"
 RAW_PROTEINS = \
     "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/data/vogdb/"\
     "vog.proteins.all.20210525.fa"
@@ -29,7 +28,7 @@ VOG_TRUTH_FILE = \
 OUT_DATA_PATH = \
     "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/data/"\
     "vogdb_by_vogdb/"
-OUT_PLOT_PATH = "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/tables/vogdb_by_vogdb"
+
 
 MMSEQS_ARGS = {'strip_from_annotations':['.msa'],
                'take_only_one':True}
@@ -37,8 +36,9 @@ HMMER_ARGS = {'strip_from_annotations':[],
               'file_name': HMMER_FILE,
               'take_only_one':True}
 
-def parse_hmmsearch_domtblout():
+def parse_hmmsearch_domtblout(limit_e=1e-15):
     return parse_hmmsearch_domtblout_parent(
+        limit_e=limit_e,
         **HMMER_ARGS
     )
 
@@ -109,3 +109,12 @@ def read_vog_truth(file_name=VOG_TRUTH_FILE):
     data = data[['ProteinID', 'annotation']]
     return data
 
+# Plot and table tools
+OUT_LATEX_PATH = \
+    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
+    "tables/vogdb_by_vogdb"
+OUT_PLOT_PATH = \
+    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
+    "plots/vogdb_by_vogdb"
+DARKER_COLOR = (220/255, 220/255, 220/255)
+LIGHT_COLOR = (240/255, 240/255, 240/255)

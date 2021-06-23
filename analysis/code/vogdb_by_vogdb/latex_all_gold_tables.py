@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 from sklearn.metrics import confusion_matrix
-from shared_tools import OUT_DATA_PATH, OUT_PLOT_PATH
+from shared_tools import OUT_DATA_PATH, OUT_LATEX_PATH
 
 def make_latex_stat_rep(df, f):
     f.write(df[['name', 'specificity', 'sensitivity', 'balanced_accuracy']].\
@@ -18,42 +18,42 @@ def make_select_tex():
     all_stats = pd.read_pickle(os.path.join(
         OUT_DATA_PATH, 'gold_standard_comp_stats.pkl'))
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_balanced_accuracy_stats.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_balanced_accuracy_stats.tex"), "w") as f:
         make_latex_stat_rep(
             all_stats.sort_values('balanced_accuracy').iloc[-1], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_balanced_accuracy_cfmx.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_balanced_accuracy_cfmx.tex"), "w") as f:
         make_latex_cfmx_rep(
             all_stats.sort_values('balanced_accuracy').iloc[-1], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_sensitivity_stats.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_sensitivity_stats.tex"), "w") as f:
         make_latex_stat_rep(
             all_stats.sort_values('sensitivity').iloc[-1], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_sensitivity_cfmx.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_sensitivity_cfmx.tex"), "w") as f:
         make_latex_cfmx_rep(
             all_stats.sort_values('sensitivity').iloc[-1], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_specificity_stats.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_specificity_stats.tex"), "w") as f:
         make_latex_stat_rep(
             all_stats.sort_values('specificity').iloc[-1], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_specificity_cfmx.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_specificity_cfmx.tex"), "w") as f:
         make_latex_cfmx_rep(
             all_stats.sort_values('specificity').iloc[-1], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "hmmer_default_stats.tex"), "w") as f:
+        OUT_LATEX_PATH, "hmmer_default_stats.tex"), "w") as f:
         make_latex_stat_rep(
             all_stats[all_stats['name'] == 'hmmer_default'].iloc[0], f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "hmmer_default_cfmx.tex"), "w") as f:
+        OUT_LATEX_PATH, "hmmer_default_cfmx.tex"), "w") as f:
         make_latex_cfmx_rep(
             all_stats[all_stats['name'] == 'hmmer_default'].iloc[0], f)
 
@@ -73,26 +73,26 @@ def make_select_tex():
         .sort_values('tp').iloc[-1]
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "most_similar_stats.tex"), "w") as f:
+        OUT_LATEX_PATH, "most_similar_stats.tex"), "w") as f:
         make_latex_stat_rep(most_similar, f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "most_similar_cfmx.tex"), "w") as f:
+        OUT_LATEX_PATH, "most_similar_cfmx.tex"), "w") as f:
         make_latex_cfmx_rep(most_similar, f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_tp_less_fp_stats.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_tp_less_fp_stats.tex"), "w") as f:
         make_latex_stat_rep(best_tp_better_fp, f)
 
     with open(os.path.join(
-        OUT_PLOT_PATH, "best_tp_less_fp_cfmx.tex"), "w") as f:
+        OUT_LATEX_PATH, "best_tp_less_fp_cfmx.tex"), "w") as f:
         make_latex_cfmx_rep(best_tp_better_fp, f)
 
 def make_all_tex():
     all_stats = pd.read_pickle(os.path.join(
         OUT_DATA_PATH, 'gold_standard_comp_stats.pkl'))
     with open(os.path.join(
-        OUT_PLOT_PATH, "All.tex"), "w") as f:
+        OUT_LATEX_PATH, "All.tex"), "w") as f:
         f.write("\\begin{tabular}{r|l}\n")
         f.write("Confusion Matrix & Description")
         f.write(" \\\\\n")

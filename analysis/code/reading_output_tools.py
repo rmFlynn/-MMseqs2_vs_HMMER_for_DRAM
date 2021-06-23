@@ -22,7 +22,7 @@ HMMSCAN_COLUMN_TYPES = [str, str, int, str, str, int, float, float, float,
 PCT_COVER = 0.35
 
 def parse_hmmsearch_domtblout_parent(file_name:str, strip_from_annotations,
-                                     take_only_one:bool):
+                                     take_only_one:bool, limit_e=1e-15):
     df_lines = list()
     for line in open(file_name):
         if not line.startswith('#'):
@@ -53,7 +53,7 @@ def parse_hmmsearch_domtblout_parent(file_name:str, strip_from_annotations,
         results = results.sort_values('e-value').groupby('ProteinID').first().\
             reset_index()
     # filter evalue to match defalt
-    results = results[results['e-value'] < 1e-15]
+    results = results[results['e-value'] < limit_e]
     return results
 
 def read_mmseqs_results_parent(file_name:str, strip_from_annotations,

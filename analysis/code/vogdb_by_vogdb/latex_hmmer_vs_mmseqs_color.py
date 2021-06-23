@@ -27,7 +27,8 @@ def main():
     cfs = dif_df['confusion_matrix'].apply(lambda x: x - hmmer)
 
     for i, j in pd.DataFrame(cfs).iterrows():
-        with open("latex/dif_" + i +".tex", "w") as f:
+        with open(os.path.join(
+            OUT_LATEX_PATH, "dif_" + i +".tex"), "w") as f:
             f.write(
                 pd.DataFrame(
                     color_cfmx(j[0]),

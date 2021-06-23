@@ -23,9 +23,12 @@ RAW_PROTEINS = \
 OUT_DATA_PATH = \
     "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/data/"\
     "genome15_by_vogdb/"
-OUT_PLOT_PATH = \
+OUT_LATEX_PATH = \
     "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
     "tables/genome15_by_vogdb"
+OUT_PLOT_PATH = \
+    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
+    "plots/genome15_by_vogdb"
 
 MMSEQS_ARGS = {'strip_from_annotations':['.msa'],
                'take_only_one':True}
