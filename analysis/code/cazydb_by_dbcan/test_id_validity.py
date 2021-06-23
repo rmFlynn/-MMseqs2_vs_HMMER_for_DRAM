@@ -1,17 +1,23 @@
 """
 This is the first file that should be run and requiers actual thoght
 """
+import os
 import sys
 import numpy as np
 import pandas as pd
-from shared_tools import parse_hmmsearch_domtblout, \
-    read_mmseqs_results, filter_protein_ids, split_out_protein_list, \
-    MMSEQS_SWEEP_OUTPUT, flatten_protein_ids, list_anotations
+sys.path.insert(0, "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/"
+                "analysis/code/")
+from shared_tools import MMSEQS_SWEEP_OUTPUT, HMMER_ARGS, MMSEQS_ARGS, \
+    HMMER_ARGS_TESTING, MMSEQS_ARGS_TESTING, RAW_PROTEINS, PROTEIN_RE
+from reading_output_tools import parse_hmmsearch_domtblout, \
+    read_mmseqs_results, set_up_comparison, list_proteins, \
+    list_annotations
+from dbcan_tools import filter_protein_ids, flatten_protein_ids, \
+    RAW_ALIGNMENTS, split_out_protein_list
 
-hmmer_df = parse_hmmsearch_domtblout()
-
+hmmer_df = parse_hmmsearch_domtblout(**HMMER_ARGS_TESTING)
 mmseqs_df = read_mmseqs_results(os.path.join(
-    MMSEQS_SWEEP_OUTPUT, "evalue_1e-15_sens_7.500000"))
+    MMSEQS_SWEEP_OUTPUT, "evalue_1e-15_sens_7.500000"), **MMSEQS_ARGS_TESTING)
 
 """
 this part of the analysis will use the default hmmer data and a representative
@@ -30,36 +36,45 @@ the output of the falowing comands. Good should have valid protein ids and bad s
 
 The best place to start is with the faa file itself.
 """
-good, bad = filter_protein_ids(flatten_protein_ids(list_proteins()))
+good, bad = filter_protein_ids(flatten_protein_ids(list_proteins(RAW_PROTEINS)),
+                               PROTEIN_RE)
 good
 bad
 """
-This seam to have worked well
+This seem to have worked well
 """
-good, bad = filter_protein_ids(mmseqs_df['annotation'].values)
+good, bad = filter_protein_ids(mmseqs_df['annotation'].values, PROTEIN_RE)
 good
 bad
 """
 It may take some time. Note that 'CBM35inCE17', 'dockerin' are not bad
 proteins but are not in the target data base.
 """
-good, bad = filter_protein_ids(hmmer_df['annotation'].values)
+good, bad = filter_protein_ids(hmmer_df['annotation'].values, PROTEIN_RE)
 good
 bad
 """
 Same story with 'SLH' and 'cohesin'
 """
-good, bad = split_out_protein_list(mmseqs_df['ProteinID'].values)
+good, bad = split_out_protein_list(mmseqs_df['ProteinID'], PROTEIN_RE)
 np.unique(np.concatenate(good.values))
 bad
 """
 Again no complaints
 """
-good, bad = split_out_protein_list(hmmer_df['ProteinID'].values)
+good, bad = split_out_protein_list(hmmer_df['ProteinID'])
 np.unique(np.concatenate(good.values))
 bad
 """
 seems we are good here.
+
+Realy fast lets also check that we are not reading in result in the same
+maner as vogdb, meaning that there are repeats.
+"""
+hmmer_df[hmmer_df['ProteinID'].duplicated()]
+mmseqs_df[mmseqs_df['ProteinID'].duplicated()]
+"""
+again this passes
 
 ## Checking Protein IDs
 
@@ -89,17 +104,7 @@ mmseqs_df[mmseqs_df['ProteinID'].duplicated()]
 
 Now we ask, are all the protein IDs in the original protein data base?
 """
-proteins = pd.DataFrame({'ProteinID': list_proteins()})
-
-def set_up_comparison(data, comp, on):
-    data = data.copy()
-    comp['is in in'] = 1
-    data['is in out'] = 1
-    comp_df = pd.merge(data, comp, on=on, how='outer')
-    comp_df['is in out'].fillna(0, inplace=True)
-    comp_df['is in in'].fillna(0, inplace=True)
-    return comp_df
-
+proteins = pd.DataFrame({'ProteinID': list_proteins(RAW_PROTEINS)})
 hmmer_protein = set_up_comparison(hmmer_df, proteins, on='ProteinID')
 mmseqs_protein = set_up_comparison(mmseqs_df, proteins, on='ProteinID')
 """
@@ -121,13 +126,14 @@ mmseqs_protein[mmseqs_protein['is in out'] == 0]
 639476 / 1716043
 """
 there are 639476 (38%) observations for mmseqs and for 274559 (15%) hmmer. This is more
-more than expected for mmseqs but it may be realated to the odd ides above
+more than expected for mmseqs but it may be realated to the odd ids above
 
 Now we will check annotations in the same whay.
 """
 annotations = pd.DataFrame({
     'annotation':
-    filter_protein_ids(list_anotations(['dbCAN-fam-aln/', '.aln']))[0]
+    filter_protein_ids(list_annotations(RAW_ALIGNMENTS, ['dbCAN-fam-aln/', '.aln']),
+                       PROTEIN_RE)[0]
 })
 hmmer_df['annotation'] = \
     hmmer_df['annotation'].str.split('_', expand=True)[0]
@@ -162,6 +168,9 @@ Finally it is good to take a look at the default file reads
 """
 
 
+hmmer_df = parse_hmmsearch_domtblout(**HMMER_ARGS)
+mmseqs_df = read_mmseqs_results(os.path.join(
+    MMSEQS_SWEEP_OUTPUT, "evalue_1e-15_sens_7.500000"), **MMSEQS_ARGS)
 
 
 

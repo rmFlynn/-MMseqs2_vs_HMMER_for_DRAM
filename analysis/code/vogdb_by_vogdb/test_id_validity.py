@@ -1,11 +1,18 @@
 """Download format data and make a plot"""
+import os
 import sys
 import numpy as np
 import pandas as pd
-from shared_tools import parse_hmmsearch_domtblout, \
-    read_mmseqs_results, list_vog_protines, list_vogs, \
-    read_vog_truth, make_hmmer_vs_mmseqs_df, make_hmmmer_vs_vog_truth_df, \
-    make_mmseqs_vs_vog_truth_df, MMSEQS_SWEEP_OUTPUT
+sys.path.insert(0, "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/"
+                "analysis/code/")
+from shared_tools import MMSEQS_SWEEP_OUTPUT, HMMER_ARGS, MMSEQS_ARGS, \
+    VOG_TRUTH_FILE, RAW_PROTEINS
+from reading_output_tools import parse_hmmsearch_domtblout, \
+    read_mmseqs_results, set_up_comparison, list_proteins, \
+    list_annotations
+from vog_tools import RAW_ALIGNMENTS, make_hmmer_vs_mmseqs_df, \
+    read_vog_truth, read_vog_truth, make_hmmer_vs_mmseqs_df,\
+    make_hmmmer_vs_vog_truth_df, make_mmseqs_vs_vog_truth_df
 
 """
 this part of the analysis will use the default hmmer data and a representative
@@ -19,17 +26,18 @@ valid I have decided to take that risk so that the most important results will
 be checked more throughly.
 
 """
-hmmer_df = parse_hmmsearch_domtblout()
+hmmer_df = parse_hmmsearch_domtblout(**HMMER_ARGS)
 
 mmseqs_df = read_mmseqs_results(os.path.join(
-    MMSEQS_SWEEP_OUTPUT, "evalue_1e-15_sens_7.500000"))
+    MMSEQS_SWEEP_OUTPUT, "evalue_1e-15_sens_7.500000"), **MMSEQS_ARGS)
 
-vog_truth = read_vog_truth()
+vog_truth = read_vog_truth(VOG_TRUTH_FILE)
 
 """
 Checking Protein IDs
 
-The protein ides are different for each data set. Here we will do some simper checks to see if they are the same as those in the protein file.
+The protein ides are different for each data set. Here we will do some
+simper checks to see if they are the same as those in the protein file.
 
 First we will check that all protein ids appear only once.
 NOTE: This is specific to vogdb as we only take the top result here.
@@ -56,17 +64,7 @@ There was no output, indicating no duplications.
 
 Now we ask, are all the protein IDs in the original protein data base?
 """
-proteins = pd.DataFrame({'ProteinID': list_vog_protines()})
-
-def set_up_comparison(data, comp, on):
-    data = data.copy()
-    comp['is in in'] = 1
-    data['is in out'] = 1
-    comp_df = pd.merge(data, comp, on=on, how='outer')
-    comp_df['is in out'].fillna(0, inplace=True)
-    comp_df['is in in'].fillna(0, inplace=True)
-    return comp_df
-
+proteins = pd.DataFrame({'ProteinID': list_proteins(RAW_PROTEINS)})
 hmmer_protein = set_up_comparison(hmmer_df, proteins, on='ProteinID')
 mmseqs_protein = set_up_comparison(mmseqs_df, proteins, on='ProteinID')
 vog_truth_protein = set_up_comparison(vog_truth, proteins, on='ProteinID')
@@ -77,9 +75,9 @@ This would only happen if there is an error so we want no results.
 hmmer_protein[hmmer_protein['is in in'] == 0]
 mmseqs_protein[mmseqs_protein['is in in'] == 0]
 vog_truth_protein[vog_truth_protein['is in in'] == 0]
-"it looks like we are OK on this for now. "
-
 """
+it looks like we are OK on this for now.
+
 Here we will list and count observations that are in the input but not in the
 output. It is expected that some proteins will not get matched but we want it
 to be few. and we don't want it to happen because of the wrong reasons.
@@ -88,12 +86,12 @@ hmmer_protein[hmmer_protein['is in out'] == 0]
 mmseqs_protein[mmseqs_protein['is in out'] == 0]
 vog_truth_protein[vog_truth_protein['is in out'] == 0]
 """
-there are 40341 observations for mmseqs and 133150 for hmmer. This is about
+there are 140341 observations for mmseqs and 133150 for hmmer. This is about
 as we would expect, it is similar to the 128305 in the truth.
 
 Now we will check vogs in the same whay.
 """
-vogs = pd.DataFrame({'annotation': list_vogs()})
+vogs = pd.DataFrame({'annotation': list_annotations(RAW_ALIGNMENTS, ['.msa'])})
 hmmer_vogs = set_up_comparison(hmmer_df, vogs, on='annotation')
 mmseqs_vogs = set_up_comparison(mmseqs_df, vogs, on='annotation')
 vog_truth_vogs = set_up_comparison(vog_truth, vogs, on='annotation')
@@ -115,7 +113,7 @@ hmmer_vogs[hmmer_vogs['is in out'] == 0]
 mmseqs_vogs[mmseqs_vogs['is in out'] == 0]
 vog_truth_vogs[vog_truth_vogs['is in out'] == 0]
 """
-there are one a few observations for mmseqs and hmmer, more for mmseqs. This
+there are few observations for mmseqs and hmmer, more for mmseqs. This
 is about as we would expect, and close to the 0 in the truth.
 
 
