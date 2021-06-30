@@ -20,35 +20,42 @@ This will list all test with the version of code and scripts used to run them.
 ## Organization
 
 1. Data: Unmodified original data
-  a. Sub-project
+
+  a. Pipelines/Sub-project
+
 2. Results: Time stamped results
-  a. Sub-project
+
+  a. Pipelines/Sub-project
+
 3. Analysis: Analysis of results
-  a. Sub-project
+
+  a. Pipelines/Sub-project
   b. Shared: code that is used across sub projects
+
 4. Job_scripts: Writon-ization of a scripts file for slurm jobs and scripts for jobs
-  a. Sub-project
+
+  a. Pipelines/Sub-project
+
 5. src: Code referenced by job scripts, mostly python.
+
   a. Sub-project
   b. Shared: code that is used across sub projects
 
 ## Data sets (location:Origin)
 
-data/
-    dbcam/
-        CAZyDB.07312020.fa : http://bcb.unl.edu/dbCAN2/download/dbCAN-fam-aln-V9.tar.glz
-        fadbCAN-fam-aln-V9.tar.gz : http://bcb.unl.edu/dbCAN2/download/CAZyDB.07312020.fa
-        dbCAN-HMMdb-V9.txt : http://bcb.unl.edu/dbCAN2/download/dbCAN-HMMdb-V9.txt
-    genome15/
-	genes.faa : /home/projects-wrighton/DRAM_performance/15_soil_genomes/DRAM_test/genes.faa
-    shale/
-        genes.faa : /home/projects/DRAM/Shale_10kb_pub_050420/DRAMv_nov/genes.faa
-
-    vogdb/ : http://fileshare.csb.univie.ac.at/vog/vog203/
-         vog.hmm/ : vog.hmm.20210525.tar.gz : http://fileshare.csb.univie.ac.at/vog/vog203/vog.hmm.tar.gz
-         vog.members.20210525.tsv.gz : http://fileshare.csb.univie.ac.at/vog/vog203/vog.members.tsv.gz
-         vog.proteins.all.20210525.fa : http://fileshare.csb.univie.ac.at/vog/vog203/vog.proteins.all.fa.gz
-         vog.raw_algs.20210525.tar.gz : http://fileshare.csb.univie.ac.at/vog/vog203/vog.raw_algs.tar.gz
+   * dbcam/
+       * CAZyDB.07312020.fa : http://bcb.unl.edu/dbCAN2/download/dbCAN-fam-aln-V9.tar.glz
+       * fadbCAN-fam-aln-V9.tar.gz : http://bcb.unl.edu/dbCAN2/download/CAZyDB.07312020.fa
+       * dbCAN-HMMdb-V9.txt : http://bcb.unl.edu/dbCAN2/download/dbCAN-HMMdb-V9.txt
+   * genome15/
+        * genes.faa : /home/projects-wrighton/DRAM_performance/15_soil_genomes/DRAM_test/genes.faa
+   * shale/
+        * genes.faa : /home/projects/DRAM/Shale_10kb_pub_050420/DRAMv_nov/genes.faa
+   * vogdb/ : http://fileshare.csb.univie.ac.at/vog/vog203/
+        * vog.hmm/ : vog.hmm.20210525.tar.gz : http://fileshare.csb.univie.ac.at/vog/vog203/vog.hmm.tar.gz
+        * vog.members.20210525.tsv.gz : http://fileshare.csb.univie.ac.at/vog/vog203/vog.members.tsv.gz
+        * vog.proteins.all.20210525.fa : http://fileshare.csb.univie.ac.at/vog/vog203/vog.proteins.all.fa.gz
+        * vog.raw_algs.20210525.tar.gz : http://fileshare.csb.univie.ac.at/vog/vog203/vog.raw_algs.tar.gz
 
 Results
 
@@ -89,52 +96,51 @@ Both folders contain all data in both csv and pkl format.
 ### Pipeline Results Processing Summary
 
 All the pipelines are different, though they share similarities based on whether they are andotated by VOGdb or dbCAN. The most critical part of the results analisis is the post processing that changes how the results are read and interpreted. Below is a summary of how the reading is different for each pipeline.
-  Genome15_by_vogdb:
-
-      For MMseqs:
+  * Genome15_by_vogdb:
+     * For MMseqs:
           Remove '.msa' from all annotations
           Take only one value for each protein id, the value with the lowest e-value
-      For HMMER:
+     * For HMMER:
           Take only one annotations for each protein id, the value with the lowest e-value
 
-  Shale_by_vogdb:
+  * Shale_by_vogdb:
 
-      For MMseqs:
+     * For MMseqs:
           Remove '.msa' from all annotations
           Take only one value for each protein id, the value with the lowest e-value
-      For HMMER:
+     * For HMMER:
           Take only one annotations for each protein id, the value with the lowest e-value
 
-  Vogdb_by_vogdb:
+  * Vogdb_by_vogdb:
 
-      For MMseqs:
+     * For MMseqs:
           Remove '.msa' from all annotations
           Take only one value for each protein id, the value with the lowest e-value
-      For HMMER:
+     * For HMMER:
           Take only one annotations for each protein id, the value with the lowest e-value
 
 
-  Cazydb_by_dbcan:
+   * Cazydb_by_dbcan:
 
-      For MMseqs:
+     * For MMseqs:
           Remove '.aln' from all annotations
           Take multiple annotations for each protein id, but still take only the pair(protein and annotation) with the lowest e-value
           Split any annotations in the form DDD_NN to take only the portion before the under score(DDD).
           compare all resulting IDs to a filtering regex and take only matches
-      For HMMER:
+     * For HMMER:
           Take multiple annotations for each protein id, but still take only the pair(protein and annotation) with the lowest e-value
           Remove '.hmm' from all annotations
           Split any annotations in the form DDD_NN to take only the portion before the under score(DDD).
           compare all resulting IDs to a filtering regex and take only matches
 
-  Genome15_by_dbcan:
+  * Genome15_by_dbcan:
 
-      For MMseqs:
+     * For MMseqs:
           Remove '.aln' from all annotations
           Take multiple annotations for each protein id, but still take only the pair(protein and annotation) with the lowest e-value
           Split any annotations in the form DDD_NN to take only the portion before the under score(DDD).
           DON'T compare resulting IDs to a filtering regex, there is no gold truth in this case only HMMER VS MMseqs comparison
-      For HMMER:
+     * For HMMER:
           Take multiple annotations for each protein id, but still take only the pair(protein and annotation) with the lowest e-value
           Remove '.hmm' from all annotations
           Split any annotations in the form DDD_NN to take only the portion before the under score(DDD).
@@ -142,10 +148,14 @@ All the pipelines are different, though they share similarities based on whether
 
 
 ## TO DO
+
 Finish all major tests.
+
 Validate data choussess for reading and filtering data.
+
 Add additional info to readme
 
-We will discuss the use cases that will be supported, the inputs and outputs, and any other unanswered questions that are related to the ASV to Bins project.
+Finish the time plots
 
+Clear all plots and analysis data and re-run
 
