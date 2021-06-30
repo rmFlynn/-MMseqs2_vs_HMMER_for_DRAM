@@ -1,11 +1,30 @@
 
 
-# vogdb_by_vogdb
-python vogdb_by_vogdb/make_stats_table.py
-python vogdb_by_vogdb/make_mmseqs_vs_hmmer_table.py
-python vogdb_by_vogdb/latex_all_gold_tables.py
 
+python vogdb_by_vogdb/make_mmseqs_vs_hmmer_table.py
+python vogdb_by_vogdb/make_stats_table.py
+python vogdb_by_vogdb/latex_all_gold_tables.py
+python vogdb_by_vogdb/latex_hmmer_vs_mmseqs_color.py
+python vogdb_by_vogdb/plot_evalue_relation.py
+python vogdb_by_vogdb/plot_evalue_vs_sensitivity.py
+python vogdb_by_vogdb/latex_mmseqs_vs_hmmer_table.py
 
 python genome15_by_vogdb/make_mmseqs_vs_hmmer_table.py
+python genome15_by_vogdb/plot_evalue_relation.py
+python genome15_by_vogdb/latex_mmseqs_vs_hmmer_table.py
 
 python shale_by_vogdb/make_mmseqs_vs_hmmer_table.py
+python shale_by_vogdb/plot_evalue_relation.py
+python shale_by_vogdb/latex_mmseqs_vs_hmmer_table.py
+
+python genome15_by_dbcan/make_mmseqs_vs_hmmer_table.py
+python genome15_by_dbcan/plot_evalue_relation.py
+python genome15_by_dbcan/latex_mmseqs_vs_hmmer_table.py
+
+python cazydb_by_dbcan/make_mmseqs_vs_hmmer_table.py
+python cazydb_by_dbcan/make_stats_table.py
+python cazydb_by_dbcan/plot_evalue_relation.py
+python cazydb_by_dbcan/latex_mmseqs_vs_hmmer_table.py
+python cazydb_by_dbcan/plot_evalue_vs_measurement.py
+
+python pan_pipeline/plot_mmseqs_vs_hmmer.py

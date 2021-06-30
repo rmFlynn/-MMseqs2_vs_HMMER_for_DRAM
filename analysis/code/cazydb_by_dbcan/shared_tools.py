@@ -1,4 +1,4 @@
-"""All functions shared across vog db"""
+"""All functions shared across this analysis"""
 
 import sys
 import os
@@ -12,7 +12,7 @@ sys.path.insert(0, "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/"
                 "analysis/code/")
 from reading_output_tools import parse_hmmsearch_domtblout, \
     read_mmseqs_results, list_proteins
-# from vog_tools import RAW_ALIGNMENTS, list_vogs, make_hmmer_vs_mmseqs_df
+from dbcan_tools import PROTEIN_RE
 
 
 HMMER_FILE = \
@@ -25,7 +25,6 @@ OUT_DATA_PATH = \
     "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/data/cazydb_by_dbcan/"
 
 
-PROTEIN_RE = r"^[A-Z]+\d+$"
 MMSEQS_ARGS = {'strip_from_annotations':['.aln'],
                'take_only_one':False,
               'filter_dbcan_under':True,# removed in testing

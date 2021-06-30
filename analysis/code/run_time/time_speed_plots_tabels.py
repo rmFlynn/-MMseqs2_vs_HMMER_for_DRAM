@@ -16,17 +16,43 @@ from time import sleep
 from sklearn.preprocessing import MinMaxScaler
 from decimal import Decimal
 from matplotlib.lines import Line2D
-DARKER_COLOR = (220/255, 220/255, 220/255)
-LIGHT_COLOR = (240/255, 240/255, 240/255)
 
-time_path = "/home/projects/DRAM/hmmer_mmseqs2_testing_take_2/run_time/"
+pipeline_dir = "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/results/vogdb_by_vogdb/"
+time_paths = [
+    os.path.join(
+        pipeline_dir,
+        "hmmer/vogdb_by_vogdb_hmmer_results_2021_06_18_09/run_times/"),
+    # os.path.join(
+    #     pipeline_dir,
+    #     "mmseqs/vogdb_by_vogdb_mmseqs_t2_results_2021_06_23_11/run_times"),
+    os.path.join(
+        pipeline_dir,
+        "mmseqs/vogdb_by_vogdb_mmseqs_t32_results_2021_06_17_18/run_times/")
+]
+os.system('/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/results/vogdb_by_vogdb/hmmer/vogdb_by_vogdb_hmmer_results_2021_06_18_09/run_times/time_hmmer')
+reduce(lambda x, y: x + y, )
 # FIX NOT FINAL [-1] FOR BAD HMMER STUFF
-data = pd.concat([pd.read_csv(time_path + tfile,
-                       sep=": ",
-                       header=None,
-                       index_col=0).T
-           for tfile in os.listdir(time_path)
-           ]).reset_index(drop=True)
+p  = [os.path.join(t_path, t_file)
+ for t_path in time_paths
+ for t_file in os.listdir(t_path)]
+
+pd.read_csv('/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/results/vogdb_by_vogdb/hmmer/vogdb_by_vogdb_hmmer_results_2021_06_18_09/run_times/time_hmmer',
+                          sep=": ",
+                          header=None,
+                          index_col=0).T
+for i in p:
+    print(i)
+    pd.read_csv(i,
+                              sep=": ",
+                              header=None,
+                              index_col=0).T
+
+data = pd.concat([pd.read_csv(os.path.join(t_path, t_file),
+                              sep=": ",
+                              header=None,
+                              index_col=0).T
+                  for t_path in time_paths
+                  for t_file in os.listdir(t_path)]).reset_index(drop=True)
 data['Elapsed (wall clock) time (Seconds)'] = \
     data['Elapsed (wall clock) time (h:mm:ss or m:ss)'].apply(
         lambda x: sum([float(i) * (60**e)
@@ -114,8 +140,8 @@ def make_plot_row(axs, y_val, y_log_scale=False):
         Line2D([0], [0], color=j, lw=2, label=i)
         for i, j in zip(mmseqs_legend,
                         sns.color_palette("Greys", lumins + 5)[5:])
-    ] + [Line2D([0], [0], color=sns.color_palette("Reds",3, desat=0.5)[2], lw=2,
-               label="HMMER3")]
+    ] + [Line2D([0], [0], color=sns.color_palette("Reds",3, desat=0.5)[2],
+                lw=2, label="HMMER3")]
     axs[1].legend(handles=legend_elements, loc='upper center', ncol=6,
                   bbox_to_anchor=(0.9, -0.1))
     axs[0].legend([],[], frameon=False)

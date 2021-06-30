@@ -1,4 +1,4 @@
-"""All functions shared across vog db"""
+"""All functions shared across this analysis"""
 
 import sys
 from io import StringIO
@@ -23,6 +23,12 @@ VOG_TRUTH_FILE = \
 OUT_DATA_PATH = \
     "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/data/"\
     "vogdb_by_vogdb/"
+OUT_LATEX_PATH = \
+    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
+    "tables/vogdb_by_vogdb"
+OUT_PLOT_PATH = \
+    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
+    "plots/vogdb_by_vogdb"
 
 
 MMSEQS_ARGS = {'strip_from_annotations':['.msa'],
@@ -31,15 +37,4 @@ HMMER_ARGS = {'strip_from_annotations':[],
               'file_name': HMMER_FILE,
               'take_only_one':True}
 
-
-
-# Plot and table tools
-OUT_LATEX_PATH = \
-    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
-    "tables/vogdb_by_vogdb"
-OUT_PLOT_PATH = \
-    "/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/analysis/output/"\
-    "plots/vogdb_by_vogdb"
-DARKER_COLOR = (220/255, 220/255, 220/255)
-LIGHT_COLOR = (240/255, 240/255, 240/255)
 

@@ -1,11 +1,13 @@
 """shared tools for the reading of vog files"""
 import sys
+import re
 from io import StringIO
 from multiprocessing import Pool
 from subprocess import Popen, PIPE
 import pandas as pd
 sys.path.insert(0, '/home/projects/DRAM/hmmer_mmseqs2_testing_take_3/src/')
 from shared import BOUTFMT6_COLUMNS
+import pytest
 
 HMMSCAN_ALL_COLUMNS = [
     'query_id', 'query_ascession', 'query_length', 'target_id',
@@ -21,10 +23,11 @@ HMMSCAN_COLUMN_TYPES = [str, str, int, str, str, int, float, float, float,
                         int, int, int, float, str]
 PCT_COVER = 0.35
 
+"""PARSING TOOLS"""
 def parse_hmmsearch_domtblout(file_name:str, strip_from_annotations,
                               take_only_one:bool, filter_dbcan_under=False,
                               filter_regex=None, limit_e=1e-15,
-                              pct_cover=0.35):
+                              pct_cover=PCT_COVER, remove_dup_pairs=True):
     df_lines = list()
     for line in open(file_name):
         if not line.startswith('#'):
@@ -54,19 +57,25 @@ def parse_hmmsearch_domtblout(file_name:str, strip_from_annotations,
     if take_only_one :
         results = results.sort_values('e-value').groupby('ProteinID').first().\
             reset_index()
+    elif remove_dup_pairs:
+        results = results.sort_values('e-value').groupby(['ProteinID', 'annotation']).\
+            first().reset_index()
     # filter evalue to match defalt
     results = results[results['e-value'] < limit_e]
+    # remove underscores
     if filter_dbcan_under:
         results['annotation'] = \
             results['annotation'].str.split('_', expand=True)[0]
+    # filter regex on pased regex
     if filter_regex is not None:
         results = results[results['annotation'].apply(
-            lambda x: re.match(filter_regex, x))]
+            lambda x: bool(re.match(filter_regex, x)))]
     return results
 
 def read_mmseqs_results(file_name:str, strip_from_annotations,
                         take_only_one:bool, filter_dbcan_under=False,
-                        filter_regex=None, pct_cover=0.35):
+                        filter_regex=None, pct_cover=PCT_COVER,
+                        remove_dup_pairs=True):
     results = pd.read_csv(file_name, sep='\t',
                           header=None, names=BOUTFMT6_COLUMNS)
     # filter percent coverage
@@ -88,6 +97,10 @@ def read_mmseqs_results(file_name:str, strip_from_annotations,
     if take_only_one:
         results = results.sort_values('e-value').groupby('ProteinID').\
             first().reset_index()
+    elif remove_dup_pairs:
+        results = results.sort_values('e-value').groupby(['ProteinID',
+                                                          'annotation']).\
+            first().reset_index()
     # remove everything after under score probably only for dbcan results
     if filter_dbcan_under:
         results['annotation'] = \
@@ -95,8 +108,9 @@ def read_mmseqs_results(file_name:str, strip_from_annotations,
     # filter based on regex probly only for dbcan results
     if filter_regex is not None:
         results = results[results['annotation'].apply(
-            lambda x: re.match(filter_regex, x))]
+            lambda x: bool(re.match(filter_regex, x)))]
     return results
+
 
 def list_proteins(raw_proteins):
     """
@@ -130,7 +144,7 @@ def make_hmmer_vs_mmseqs_df(hmmer, mmseqs):
 
 def list_annotations(raw_alignments, strip_from_annotations:list):
     """
-    :param file_name: The raw aliments file
+    :param file_name: The raw aliments filemandie.pallone@fairwaymc.com
     :returns: the count of all vogs
     """
     all_anos = pd.read_csv(
@@ -178,11 +192,3 @@ def set_up_comparison(data, comp, on):
     comp_df['is in in'].fillna(0, inplace=True)
     return comp_df
 
-def set_up_comparison(data, comp, on):
-    data = data.copy()
-    comp['is in in'] = 1
-    data['is in out'] = 1
-    comp_df = pd.merge(data, comp, on=on, how='outer')
-    comp_df['is in out'].fillna(0, inplace=True)
-    comp_df['is in in'].fillna(0, inplace=True)
-    return comp_df

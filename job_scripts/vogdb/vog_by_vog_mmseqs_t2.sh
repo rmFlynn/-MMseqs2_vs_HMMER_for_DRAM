@@ -2,7 +2,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --mem=10gb
-#SBATCH --time=1-00:00:00
+#SBATCH --time=3-00:00:00
 #SBATCH --job-name=vogdb_by_vogdb_mmseqs_t2
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=rmflynn@colostate.edu

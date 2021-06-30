@@ -11,7 +11,7 @@ from reading_output_tools import parse_hmmsearch_domtblout, \
     read_mmseqs_results, set_up_comparison, list_proteins, \
     list_annotations
 from vog_tools import RAW_ALIGNMENTS, make_hmmer_vs_mmseqs_df, \
-    read_vog_truth, read_vog_truth, make_hmmer_vs_mmseqs_df,\
+    read_vog_truth, make_hmmer_vs_mmseqs_df,\
     make_hmmmer_vs_vog_truth_df, make_mmseqs_vs_vog_truth_df
 
 """
